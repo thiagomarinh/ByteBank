@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,13 +9,15 @@ namespace ByteBank_1
 	{
 		static void ShowMenu()
 		{
-			Console.WriteLine("----------- BEM VINDO AO BYTE BANK-----------\n");
-            Console.WriteLine("1 - Adicionar nova conta");
-            Console.WriteLine("2 - Deletar uma conta");
-            Console.WriteLine("3 - Detalhes da conta");
-            Console.WriteLine("4 - Listar todas as contas");
-            Console.WriteLine("5 - Mostre o quantias total amazenada no ByteBank");
-            Console.WriteLine("0 - Para sair do programa");
+			Console.WriteLine("\n" +
+				"----------- BEM VINDO AO BYTE BANK -----------\n");
+            Console.WriteLine("[1] - Adicionar nova conta");
+            Console.WriteLine("[2] - Deletar uma conta");
+            Console.WriteLine("[3] - Detalhes da conta");
+            Console.WriteLine("[4] - Listar todas as contas");
+            Console.WriteLine("[5] - Mostre o quantias total amazenada no ByteBank");
+			Console.WriteLine("[6] - Atualizar Dados da conta: ");
+            Console.WriteLine("[0] - Para sair do programa");
             Console.Write("\nDigite a opção desejada: ");
 			
         }
@@ -31,8 +34,6 @@ namespace ByteBank_1
 			telefone.Add(Console.ReadLine());
 			Console.Write("Digite o saldo: ");
 			saldos.Add(double.Parse(Console.ReadLine()));
-
-
 		}
 
 		static void DeletarConta(List<string> cpfs, List<string> titulares, List<string> senhas,List<string> telefone, List<double> saldo)
@@ -66,10 +67,12 @@ namespace ByteBank_1
 
 			if (indexDetalhe == -1)
 			{
-				Console.WriteLine("Cpf do usuario não encontrado!!!");
-			}
+				Console.ForegroundColor = ConsoleColor.Black;
+                Console.WriteLine("Cpf do usuario não encontrado!!!\n");
+                Console.ResetColor();
+            }
 
-			Console.Write($"\nUsuario: {titulares[indexDetalhe]}  ||  Saldo: {saldos[indexDetalhe]} R$ ||  Telefone: {telefone[indexDetalhe]}\n");
+            Console.Write($"\nUsuario: {titulares[indexDetalhe]}  ||  Saldo: {saldos[indexDetalhe]} R$ ||  Telefone: {telefone[indexDetalhe]}\n");
 		}
 		
 		static void	ListarTodasAsContas(List<string> cpfs, List<string> titulares, List<double> saldos)
@@ -87,6 +90,42 @@ namespace ByteBank_1
             Console.WriteLine($"\nTtoal armezanado no ByteBank é {soma}\n");
         }
 
+		static void ManipularConta(List<string> cpfs, List<double> saldos, List<string> senhas, List<string> telefone)
+		{
+			Console.Write("Para alterar dados da sua conta digite o CPF: ");
+			string cpfParaManipular = Console.ReadLine();
+
+			int indexParaManipular = cpfs.FindIndex(c => c == cpfParaManipular);
+
+			Console.WriteLine("[1] - Para alterar a senha");
+			Console.WriteLine("[2] - Para alterar o telefone");
+			Console.WriteLine("[3] - Para alterar seu nome: ");
+			
+            Console.Write("O que gostaria de alterar? : ");
+			int alterarDado = int.Parse(Console.ReadLine());
+
+			switch (alterarDado)
+			{
+				case 1:
+					Console.Write("Digite sua nova senha: ");
+					string novaSenha = Console.ReadLine();
+					senhas.Insert(indexParaManipular, novaSenha);
+                    Console.WriteLine("Senha Atualizada com sucesso!!!");
+                    break;
+				case 2:
+					Console.Write("Digite seu novo telefone: ");
+					string novoTelefone = Console.ReadLine();
+					telefone.Insert(indexParaManipular, novoTelefone);
+					Console.WriteLine("Telefone Atualizado com sucesso!!!");
+					break;
+				case 3:
+                    
+                    break;
+
+            }
+
+		}
+
         public static void Main(string[] args)
 		{
 
@@ -98,12 +137,17 @@ namespace ByteBank_1
 
 			int option;
 
-			do
+			Console.BackgroundColor = ConsoleColor.Yellow;
+			Console.ForegroundColor = ConsoleColor.Black;
+			Console.Clear();
+
+            do
 			{
 				ShowMenu();
-				option = int.Parse(Console.ReadLine());     
+				option = int.Parse(Console.ReadLine());
+				Console.Clear();
 
-                switch (option)
+				switch (option)
 				{
 					case 0:
 						Console.WriteLine("Programa encerrando");
@@ -111,21 +155,23 @@ namespace ByteBank_1
 					case 1:
 						AdicionarConta(cpfs, titulares, senhas, telefone, saldos);
 						break;
-                    case 2:
+					case 2:
 						DeletarConta(cpfs, titulares, senhas, telefone, saldos);
-                        break;
-                    case 3:
-						DetalhesDaConta(cpfs, titulares, saldos, telefone);
-                        break;
-                    case 4:
-                        ListarTodasAsContas(cpfs, titulares, saldos);
-                        break;
-					case 5:
-                        TotalArmazenadoNoBanco(saldos);
-                        break;
-					case 6:
 						break;
-                }
+					case 3:
+						DetalhesDaConta(cpfs, titulares, saldos, telefone);
+						break;
+					case 4:
+						ListarTodasAsContas(cpfs, titulares, saldos);
+						break;
+					case 5:
+						TotalArmazenadoNoBanco(saldos);
+						break;
+					case 6:
+						ManipularConta(cpfs, saldos, senhas, telefone);
+						break;
+				}
+				
 			} while (option != 0);
 		}
 	}
