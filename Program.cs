@@ -9,14 +9,14 @@ namespace ByteBank_1
 	{
 		static void ShowMenu()
 		{
-			Console.WriteLine("\n" +
-				"----------- BEM VINDO AO BYTE BANK -----------\n");
+			Console.WriteLine("\n----------- BEM VINDO AO BYTE BANK -----------\n");
             Console.WriteLine("[1] - Adicionar nova conta");
             Console.WriteLine("[2] - Deletar uma conta");
             Console.WriteLine("[3] - Detalhes da conta");
             Console.WriteLine("[4] - Listar todas as contas");
-            Console.WriteLine("[5] - Mostre o quantias total amazenada no ByteBank");
+            Console.WriteLine("[5] - Mostre a quantia total amazenada no ByteBank");
 			Console.WriteLine("[6] - Atualizar Dados da conta: ");
+			Console.WriteLine("[7] - Transferir, Sacar e Depositar: ");
             Console.WriteLine("[0] - Para sair do programa");
             Console.Write("\nDigite a opção desejada: ");
 			
@@ -90,7 +90,7 @@ namespace ByteBank_1
             Console.WriteLine($"\nTtoal armezanado no ByteBank é {soma}\n");
         }
 
-		static void ManipularConta(List<string> cpfs, List<double> saldos, List<string> senhas, List<string> telefone)
+		static void ManipularConta(List<string> cpfs, List<string> senhas, List<string> telefone)
 		{
 			Console.Write("Para alterar dados da sua conta digite o CPF: ");
 			string cpfParaManipular = Console.ReadLine();
@@ -119,11 +119,48 @@ namespace ByteBank_1
 					Console.WriteLine("Telefone Atualizado com sucesso!!!");
 					break;
 				case 3:
-                    
+                    Console.Write("Digite seu novo Nome: ");
+                    string novoNome = Console.ReadLine();
+                    telefone.Insert(indexParaManipular, novoNome);
+					Console.Write("Nome atualizado com sucesso!!!");
                     break;
-
             }
+		}
 
+		static void TransferirSacarDepositar( List<string> cpfs, List<double> saldos)
+		{
+            Console.Write("[1] - Sacar: ");
+            Console.WriteLine("\n[2] - Depositar: ");
+			Console.WriteLine("[3] - Transferir: ");
+			Console.Write("Escolha uma opção: ");
+			int operacao = int.Parse(Console.ReadLine());
+
+			Console.Write("Digite o cpf da conta: ");
+			string cpfParaManipular = Console.ReadLine();
+            int indexParaManipular = cpfs.FindIndex(c => c == cpfParaManipular);
+
+            if (operacao == 1 & indexParaManipular == 0)
+			{
+				Console.Write("Qual Quantia gostaria de sacar?: ");
+				double quantiaSacar = double.Parse(Console.ReadLine());
+				saldos[indexParaManipular] = saldos[indexParaManipular] - quantiaSacar;
+				Console.WriteLine($"Voce sacou {quantiaSacar}R$ e seu saldo foi atualizado para {saldos[indexParaManipular]}R$");
+			}
+			else if (operacao == 2)
+			{
+                Console.Write("Qual Quantia gostaria de Depositar?: ");
+                double quantiaDepositar = double.Parse(Console.ReadLine());
+                saldos[indexParaManipular] = saldos[indexParaManipular] - quantiaDepositar;
+                Console.WriteLine($"Voce sacou {quantiaDepositar}R$ e seu saldo foi atualizado para {saldos[indexParaManipular]}R$");
+            }
+			else if (operacao == 3)
+			{
+                Console.Write("Qual quantia gostaria de Transferir: ");
+                double quantiaTransferir = double.Parse(Console.ReadLine());
+                saldos[indexParaManipular] = saldos[indexParaManipular] - quantiaTransferir;
+                Console.WriteLine($"Voce Transferiu {quantiaTransferir}R$ e seu saldo foi atualizado para {saldos[indexParaManipular]}R$");
+            }
+			
 		}
 
         public static void Main(string[] args)
@@ -134,7 +171,7 @@ namespace ByteBank_1
 			List<string> senhas = new List<string>();
 			List<double> saldos = new List<double>();
 			List<string> telefone = new List<string>();
-
+			
 			int option;
 
 			Console.BackgroundColor = ConsoleColor.Yellow;
@@ -168,7 +205,10 @@ namespace ByteBank_1
 						TotalArmazenadoNoBanco(saldos);
 						break;
 					case 6:
-						ManipularConta(cpfs, saldos, senhas, telefone);
+						ManipularConta(cpfs, senhas, telefone);
+						break;
+					case 7:
+						TransferirSacarDepositar(cpfs, saldos);
 						break;
 				}
 				
